@@ -58,7 +58,7 @@ public class TCPMon extends JFrame {
     /**
      * Field DEFAULT_PORT
      */
-    static final int DEFAULT_PORT = 8888;
+    static final int DEFAULT_PORT = 8181;
 
     /**
      * Constructor

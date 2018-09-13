@@ -142,7 +142,9 @@ class AdminPane extends JPanel {
                 + " "), c);
         c.anchor = GridBagConstraints.WEST;
         c.gridwidth = GridBagConstraints.REMAINDER;
-        tmpPanel.add(port = new NumberField(4), c);
+        NumberField portNumberField = new NumberField(5);
+        portNumberField.setValue(18181);
+        tmpPanel.add(port = portNumberField, c);
         mainPane.add(tmpPanel, c);
         mainPane.add(Box.createRigidArea(new Dimension(1, 5)), c);
 

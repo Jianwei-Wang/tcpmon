@@ -21,6 +21,9 @@ import javax.swing.table.TableModel;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.Socket;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 /**
  * this class handles the pumping of data from the incoming socket to the
@@ -93,6 +96,10 @@ class SocketRR extends Thread {
      */
     SlowLinkSimulator slowLink;
 
+    long index = 0;
+
+    DateFormat df = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
+
     /**
      * Constructor SocketRR
      *
@@ -124,6 +131,15 @@ class SocketRR extends Thread {
         this.type = type;
         myConnection = c;
         this.slowLink = slowLink;
+
+        //进来的时候第一个请求已经发出，第一个返回还未到达
+        if ("request:".equals(type)) {
+            this.index = 1;
+        }
+        if ("response:".equals(type)) {
+            this.index = 0;
+        }
+
         start();
     }
 
@@ -288,7 +304,26 @@ class SocketRR extends Thread {
                         buffer[i] = buffer[bufferLen - saved + i];
                     }
                 } else {
-                    textArea.append(new String(buffer, 0, len));
+
+                    //请求头换行
+                   String content = new String(buffer, 0, len);
+
+                   if ("request:".equals(type) &&
+                           (content.startsWith("GET ")
+                           || content.startsWith("POST ")
+                           || content.startsWith("PUT ")
+                           || content.startsWith("DELETE "))) {
+                       content = "\r\n" + content;
+                       content = "***************new request index=" + index++ + "  time=" + df.format(new Date()) + " *****************" + content;
+                       content = "   \r\n" + content;
+                       content = "   \r\n" + content;
+                   }
+
+                   if ("response:".equals(type) && content.startsWith("HTTP/")) {
+                       content = "***************new response index=" + index++ + "  time=" + df.format(new Date()) + "*****************\r\n" + content;
+                   }
+
+                    textArea.append(content);
                 }
             }
 

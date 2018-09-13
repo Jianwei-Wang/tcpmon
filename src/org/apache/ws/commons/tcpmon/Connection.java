@@ -204,8 +204,10 @@ class Connection extends Thread {
                         ""});
             listener.connections.add(this);
             inputText = new JTextArea(null, null, 20, 80);
+            inputText.setLineWrap(true);
             inputScroll = new JScrollPane(inputText);
             outputText = new JTextArea(null, null, 20, 80);
+            outputText.setLineWrap(true);
             outputScroll = new JScrollPane(outputText);
             ListSelectionModel lsm = listener.connectionTable.getSelectionModel();
             if ((count == 0) || (lsm.getLeadSelectionIndex() == 0)) {
